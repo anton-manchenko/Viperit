@@ -13,7 +13,7 @@ public protocol InteractorProtocol: ViperitComponent {
 
 open class Interactor: InteractorProtocol {
     public weak var _presenter: PresenterProtocol!
-    public weak var _store: StoreProtocol?
+    public var _store: StoreProtocol?
     
     required public init() { }
 }
