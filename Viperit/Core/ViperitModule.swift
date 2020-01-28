@@ -58,7 +58,7 @@ public extension ViperitModule where Self: RawRepresentable, Self.RawValue == St
         viewHost = HostingUserInterface(rootView: viewUI.environmentObject(envObject))
 
         return Module.build(view: viewHost, interactor: components.interactor,
-                            presenter: components.presenter, router: components.router, displayData: components.displayData)
+                            presenter: components.presenter, router: components.router, displayData: components.displayData, store: components.store)
     }
     
     
@@ -70,24 +70,26 @@ public extension ViperitModule where Self: RawRepresentable, Self.RawValue == St
         viewHost = HostingUserInterface(rootView: viewUI)
         
         return Module.build(view: viewHost, interactor: components.interactor,
-                            presenter: components.presenter, router: components.router, displayData: components.displayData)
+                            presenter: components.presenter, router: components.router, displayData: components.displayData, store: components.store)
     }
 }
 
 private extension ViperitModule where Self: RawRepresentable, Self.RawValue == String {
-    func allocateViperComponents(bundle: Bundle) -> (interactor: InteractorProtocol, presenter: PresenterProtocol, router: RouterProtocol, displayData: DisplayData?) {
+    func allocateViperComponents(bundle: Bundle) -> (interactor: InteractorProtocol, presenter: PresenterProtocol, router: RouterProtocol, displayData: DisplayData?, store: StoreProtocol?) {
         //Get class types
         let interactorClass = classForViperComponent(.interactor, bundle: bundle) as! InteractorProtocol.Type
         let presenterClass = classForViperComponent(.presenter, bundle: bundle) as! PresenterProtocol.Type
         let routerClass = classForViperComponent(.router, bundle: bundle) as! RouterProtocol.Type
         let displayDataClass = classForViperComponent(.displayData, bundle: bundle) as? DisplayData.Type
+        let storeClass = classForViperComponent(.store, bundle: bundle) as? StoreProtocol.Type
         
         //Allocate VIPER components
         let interactor = interactorClass.init()
         let presenter = presenterClass.init()
         let router = routerClass.init()
         let displayData = displayDataClass?.init()
+        let store = storeClass?.init()
         
-        return (interactor, presenter, router, displayData)
+        return (interactor, presenter, router, displayData, store)
     }
 }

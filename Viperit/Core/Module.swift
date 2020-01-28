@@ -22,6 +22,7 @@ public struct Module {
     public private(set) var presenter: PresenterProtocol
     public private(set) var router: RouterProtocol
     public private(set) var displayData: DisplayData?
+    public private(set) var store: StoreProtocol?
     
     static func build<T: RawRepresentable & ViperitModule>(_ module: T, bundle: Bundle = Bundle.main, deviceType: UIUserInterfaceIdiom? = nil) -> Module where T.RawValue == String {
         //Get class types
@@ -29,6 +30,7 @@ public struct Module {
         let presenterClass = module.classForViperComponent(.presenter, bundle: bundle) as! PresenterProtocol.Type
         let routerClass = module.classForViperComponent(.router, bundle: bundle) as! RouterProtocol.Type
         let displayDataClass = module.classForViperComponent(.displayData, bundle: bundle) as? DisplayData.Type
+        let stroreClass = module.classForViperComponent(.store, bundle: bundle) as? StoreProtocol.Type
 
         //Allocate VIPER components
         let V = loadView(forModule: module, bundle: bundle, deviceType: deviceType)
@@ -36,8 +38,9 @@ public struct Module {
         let P = presenterClass.init()
         let R = routerClass.init()
         let D = displayDataClass?.init()
+        let S = stroreClass?.init()
         
-        return build(view: V, interactor: I, presenter: P, router: R, displayData: D)
+        return build(view: V, interactor: I, presenter: P, router: R, displayData: D,store: S)
     }
 }
 
@@ -95,7 +98,7 @@ extension Module {
         }
     }
     
-    static func build(view: UserInterfaceProtocol, interactor: InteractorProtocol, presenter: PresenterProtocol, router: RouterProtocol, displayData: DisplayData?) -> Module {
+    static func build(view: UserInterfaceProtocol, interactor: InteractorProtocol, presenter: PresenterProtocol, router: RouterProtocol, displayData: DisplayData?, store: StoreProtocol?) -> Module {
         //View connections
         view._presenter = presenter
         view._displayData = displayData
@@ -103,6 +106,7 @@ extension Module {
         //Interactor connections
         var interactor = interactor
         interactor._presenter = presenter
+        interactor._strore = store
         
         //Presenter connections
         presenter._router = router
@@ -112,8 +116,8 @@ extension Module {
         //Router connections
         var router = router
         router._presenter = presenter
-        
-        return Module(view: view, interactor: interactor, presenter: presenter, router: router, displayData: displayData)
+
+        return Module(view: view, interactor: interactor, presenter: presenter, router: router, displayData: displayData, store: store)
     }
 }
 

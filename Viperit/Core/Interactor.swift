@@ -8,10 +8,12 @@
 
 public protocol InteractorProtocol: ViperitComponent {
     var _presenter: PresenterProtocol! { get set }
+    var _strore: StoreProtocol? { get set }
 }
 
 open class Interactor: InteractorProtocol {
     public weak var _presenter: PresenterProtocol!
+    public weak var _strore: StoreProtocol?
     
     required public init() { }
 }
