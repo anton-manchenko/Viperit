@@ -106,7 +106,7 @@ extension Module {
         //Interactor connections
         var interactor = interactor
         interactor._presenter = presenter
-        interactor._strore = store
+        interactor._store = store
         
         //Presenter connections
         presenter._router = router
