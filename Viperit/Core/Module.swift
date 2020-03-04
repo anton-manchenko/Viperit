@@ -79,7 +79,7 @@ public extension Module {
 
 
 //MARK: - Helper Methods
-extension Module {
+public extension Module {
     
     static func loadView<T: RawRepresentable & ViperitModule>(forModule module: T, bundle: Bundle, deviceType: UIUserInterfaceIdiom? = nil) -> UserInterfaceProtocol where T.RawValue == String {
 
